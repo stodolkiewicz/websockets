@@ -1,0 +1,26 @@
+{
+  "name": "myChat",
+  "authors": [
+    "Dawid Stodołkiewicz <dawid.stodolkiewicz@empirica.pl>"
+  ],
+  "description": "chat app",
+  "main": "",
+  "keywords": [
+    "chat",
+    "websocket"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.6.4",
+    "sockjs": "^0.3.4",
+    "angular-sockjs": "^0.1.0"
+  }
+}

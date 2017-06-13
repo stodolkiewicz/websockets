@@ -1,0 +1,68 @@
+<html ng-app="myChat">
+<head>
+	<script src="../libs/angular/angular.js" type="text/javascript"></script>
+	<script src="../libs/jquery/dist/jquery.min.js" type="text/javascript"></script>
+	<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
+	<script src="../libs/stomp-websocket/lib/stomp.min.js" type="text/javascript"></script>
+	<link href="../libs/bootstrap/dist/css/bootstrap.css" rel="stylesheet"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="app.js" type="text/javascript"></script>
+	<link href="myChat.css" rel="stylesheet"></script>
+	<script src="mainChat.controller.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="container">
+	  	<div class="page-header">
+	    	<h1>SpeakyTalky Chat</h1>    
+	  </div></h1>    
+		</div>
+	</div>
+
+	<div ng-controller="mainChatController as ctrl">
+		<div class="container m-t-10">
+			<div class="row">
+				<div class="col-md-6 m-t-10">
+					<label>Socket Connection:</label>
+					<button class="m-l-10 button" ng-click="ctrl.connect()"
+							ng-disabled="ctrl.connected"
+							ng-class="{'enabled': !ctrl.connected, 'disabled': ctrl.connected}">
+						connect
+					</button>
+					<button class="m-l-10 button" ng-click="ctrl.disconnect()" 
+						ng-disabled="!ctrl.connected"
+						ng-class="{'enabled': ctrl.connected, 'disabled': !ctrl.connected}">
+						disconnect
+					</button>
+					<span class="m-l-10">
+						connected: 
+						<i class="fa fa-plug" aria-hidden="true" 
+				    		ng-class="{'red-icon': !ctrl.connected, 'green-icon': ctrl.connected}">
+						</i>
+					</span>
+				</div>
+				<div class="col-md-6 m-t-10">
+					<label for="name">What is your name?</label>  
+					<input type="text" id="name" ng-model="ctrl.username" placeholder="Your name here..."></textarea>
+					<button class="m-l-10" ng-click="ctrl.sendName()">send</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 m-t-10">
+					<div class="panel panel-default m-t-10">
+					  	<div class="panel-body">
+					    	
+					  	</div>
+					</div>
+					
+				</div>
+				<div class="col-md-6">
+					{{ctrl.greetingResponses}}
+				</div>
+			</div>
+
+
+		</div>
+		
+
+	</div>
+</body>
