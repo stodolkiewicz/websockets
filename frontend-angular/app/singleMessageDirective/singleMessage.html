@@ -1,0 +1,10 @@
+<link href="singleMessageDirective/singleMessage.css" rel="stylesheet"></script>
+<div class="well message-well" ng-style="vm.colorStyle">
+	<label>{{vm.message.user}}</label>
+	<div style="display: inline-block; float:right;">
+	 	{{vm.message.currentTime.hour}}:{{vm.message.currentTime.minute}}:{{vm.message.currentTime.second}}
+	 </div>
+    <div>
+        <p>{{vm.message.message}}</p>
+    </div>
+</div>

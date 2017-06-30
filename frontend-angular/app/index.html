@@ -1,68 +1,137 @@
 <html ng-app="myChat">
 <head>
 	<script src="../libs/angular/angular.js" type="text/javascript"></script>
+	<link href="../libs/huebee/dist/huebee.css" rel="stylesheet"></script>
+	<script src="../libs/huebee/dist/huebee.pkgd.min.js" type="text/javascript"></script>
 	<script src="../libs/jquery/dist/jquery.min.js" type="text/javascript"></script>
 	<script src="https://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 	<script src="../libs/stomp-websocket/lib/stomp.min.js" type="text/javascript"></script>
 	<link href="../libs/bootstrap/dist/css/bootstrap.css" rel="stylesheet"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+	<script src="../libs/bootstrap/dist/js/bootstrap.js" type="text/javascript"></script>
+
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="app.js" type="text/javascript"></script>
 	<link href="myChat.css" rel="stylesheet"></script>
 	<script src="mainChat.controller.js" type="text/javascript"></script>
+	<script src="singleMessageDirective/singleMessage.directive.js" type="text/javascript"></script>
+	<script src="websockets.service.js" type="text/javascript"></script>
+	<script src="utilities.service.js" type="text/javascript"></script>
+	<script src="colorUtilities.service.js" type="text/javascript"></script>
+	
 </head>
-<body>
+<body ng-controller="mainChatController as ctrl">
 	<div class="container">
 	  	<div class="page-header">
 	    	<h1>SpeakyTalky Chat</h1>    
-	  </div></h1>    
-		</div>
+	  </div>   
 	</div>
 
-	<div ng-controller="mainChatController as ctrl">
-		<div class="container m-t-10">
-			<div class="row">
-				<div class="col-md-6 m-t-10">
-					<label>Socket Connection:</label>
-					<button class="m-l-10 button" ng-click="ctrl.connect()"
-							ng-disabled="ctrl.connected"
-							ng-class="{'enabled': !ctrl.connected, 'disabled': ctrl.connected}">
-						connect
-					</button>
-					<button class="m-l-10 button" ng-click="ctrl.disconnect()" 
-						ng-disabled="!ctrl.connected"
-						ng-class="{'enabled': ctrl.connected, 'disabled': !ctrl.connected}">
-						disconnect
-					</button>
-					<span class="m-l-10">
-						connected: 
-						<i class="fa fa-plug" aria-hidden="true" 
-				    		ng-class="{'red-icon': !ctrl.connected, 'green-icon': ctrl.connected}">
-						</i>
-					</span>
-				</div>
-				<div class="col-md-6 m-t-10">
-					<label for="name">What is your name?</label>  
-					<input type="text" id="name" ng-model="ctrl.username" placeholder="Your name here..."></textarea>
-					<button class="m-l-10" ng-click="ctrl.sendName()">send</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-6 m-t-10">
-					<div class="panel panel-default m-t-10">
-					  	<div class="panel-body">
-					    	
-					  	</div>
-					</div>
-					
-				</div>
-				<div class="col-md-6">
-					{{ctrl.greetingResponses}}
-				</div>
-			</div>
-
-
+		<div id="myModal" class="modal fade in" role="dialog">
+		  	<div class="modal-dialog">
+			    <div class="modal-content">
+			      	<div class="modal-header">		     
+			        	<h4 class="modal-title">Welcome to SpeakyTalky Chat!</h4>
+			      	</div>
+			      	<div class="modal-body">
+			      		<form name="loginForm" required>
+							<label for="name">Choose your username:</label>  
+							<input type="text" id="name" ng-model="ctrl.username" placeholder="username..."
+								name="login" 
+								ng-minlength="3"
+								ng-maxlength="28"
+								required>
+							</input>					      	  
+				      	    <div ng-messages="loginForm.login.$error">
+						        <p ng-message="minlength">Your username is too short.</p>
+						        <p ng-message="maxlength">Your username is too long.</p>
+						        <p ng-message="required">Your username is required.</p>
+						    </div>
+						</form>
+			      	</div>
+			      	<div class="modal-footer">
+						<button class="m-l-10 button"
+								ng-click="ctrl.connectAll()"
+								ng-disabled="ctrl.connected"
+								ng-class="{'enabled': !ctrl.connected, 'disabled': ctrl.connected}"
+								type="submit"
+								ng-show="loginForm.login.$valid">
+							connect
+						</button>
+			      	</div>
+			    </div>
+		  	</div>
 		</div>
-		
 
+
+	<div class="container">
+		<div class="row m-b-10">
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-md-12">
+						<button class="m-l-10 button" ng-click="ctrl.showModal(true)"
+								ng-disabled="ctrl.connected"
+								ng-class="{'enabled': !ctrl.connected, 'disabled': ctrl.connected}">
+							connect
+						</button>
+						<button class="m-l-10 button" ng-click="ctrl.disconnectAll()" 
+							ng-disabled="!ctrl.connected"
+							ng-class="{'enabled': ctrl.connected, 'disabled': !ctrl.connected}">
+							disconnect
+						</button>
+						<span class="m-l-10">
+							connected: 
+							<i class="fa fa-plug" aria-hidden="true" 
+					    		ng-class="{'red-icon': !ctrl.connected, 'green-icon': ctrl.connected}">
+							</i>
+						</span>
+						<div id="color-chooser" ng-model="ctrl.hueb.color" class="m-l-10"
+							 ng-change="ctrl.setColor()" style="display: inline-block">
+						</div>
+					</div>
+					<div class="col-md-12 m-t-10">
+						<div class="panel panel-default m-t-10" id="message-area">
+					  		<div class="panel-body m-t-10">
+					    		<div ng-repeat="message in ctrl.WebsocketsSvc.greetingResponses">
+									<single-message message="message" 
+									color={{ctrl.returnColorIfOwnMessage(message)}}></single-message>
+					    		</div>
+					  		</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<textarea id="input-text-area" 
+							ng-keypress="ctrl.sendMessageByEnterAll($event)"
+							ng-model="ctrl.message"></textarea>
+						<button class="button" id="send-message-button" ng-click="ctrl.sendMessageAll()">
+							send
+						</button>
+					</div>
+					<div class="col-md-12 m-t-10">
+
+					</div>										
+				</div>
+
+<!-- 				color = {{ctrl.color}}
+				username = {{ctrl.username}}
+				greetingResponses = {{ctrl.greetingResponses}} -->
+			</div>		
+		<!-- 	<div class="col-md-6 m-t-10">
+				<input type="text" id="user-to-send-message-to" ng-model="ctrl.userToConnectTo" placeholder="connect to username..."></textarea>
+				<button class="button" 
+						ng-click="ctrl.connectToUser()">
+							connectTo
+						</button>
+				<textarea id="input-text-area" 
+					ng-model="ctrl.messageToUser"></textarea>
+				<button class="button" ng-click="ctrl.sendMessageToUser(ctrl.userToConnectTo)">
+							send
+						</button>
+						<br>
+					ctrl.username = {{ctrl.username}}<br>
+					ctrl.userToConnectTo = {{ctrl.userToConnectTo}}	<br>
+					ctrl.messageToUser = {{ctrl.messageToUser}} <br>
+			</div>	 -->
 	</div>
 </body>
+

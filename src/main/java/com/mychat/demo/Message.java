@@ -1,18 +1,19 @@
 package com.mychat.demo;
 
-/**
- * Created by Admin on 13/06/2017.
- */
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
+
 public class Message {
 
     private String user;
     private String message;
+    private LocalTime currentTime;
 
-    public Message(){}
-
-    public Message(String user, String message) {
-        this.user = user;
-        this.message = message;
+    public Message(){
+        this.currentTime = LocalTime.now();
     }
 
     public String getUser() {
@@ -29,5 +30,13 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public LocalTime getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(LocalTime currentTime) {
+        this.currentTime = currentTime;
     }
 }

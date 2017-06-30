@@ -6,6 +6,10 @@
 	margin-top: 10px;
 }
 
+.m-b-10{
+	margin-bottom: 10px;
+}
+
 .red-icon{
 	color: rgb(204, 0, 0);
 }
@@ -14,7 +18,47 @@
 	color: rgb(0, 204, 0);
 }
 
+#message-area{
+	min-height: 160px;
+	height: 60%;
+    overflow-y: scroll;
+    word-wrap:break-word;
+	margin-bottom: 0;
+}
 
+.container{
+	margin-left: 15px;
+}
+
+#input-text-area{
+	width: 87%;
+	min-height: 65px;
+	display: inline-block;
+	border: 2px solid #765942;
+	border-radius: 10px;
+}
+
+#input-text-area:focus{
+    outline: none;
+}
+
+
+#send-message-button{
+	width:12%;
+	min-height: 65px;
+	display: inline-block;
+	vertical-align: top;
+	float: right;
+}
+
+#color-chooser{
+    width: 30px;
+    height: 30px;
+    vertical-align:top;
+    border-radius: 3px;
+    border: 1px solid darkblue;
+    background-color: blue;
+}
 
 /*-------------  butttons ---------*/
 .button {
@@ -56,4 +100,9 @@
     background-image: -ms-linear-gradient(top, #26759e, #133d5b);
     background-image: -o-linear-gradient(top, #26759e, #133d5b);
     background-image: linear-gradient(top, #26759e, #133d5b);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#26759e, endColorstr=#133d5b);
+}
+/*---------------------------------------------------*/
+
+div.page-header{
+	margin-bottom: 0;
 }

@@ -21,6 +21,7 @@
   "dependencies": {
     "angular": "angularjs#^1.6.4",
     "sockjs": "^0.3.4",
-    "angular-sockjs": "^0.1.0"
+    "angular-sockjs": "^0.1.0",
+    "huebee": "^1.0.1"
   }
 }

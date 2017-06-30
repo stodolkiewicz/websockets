@@ -1,0 +1,13 @@
+.message-well{
+	margin: 0 0;
+	padding: 5px 20px; 
+}
+
+.message-well p{
+	margin-bottom: 0;
+	margin-left: 5px;
+}
+
+.message-well label{
+	margin-bottom: 0;
+}
